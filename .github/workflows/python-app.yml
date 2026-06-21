@@ -9,8 +9,8 @@ on:
   pull_request:
     branches: [ "main" ]
   schedule:
-    # 定时任务，在每天的北京时间 10:07（UTC 02:07）执行
-    - cron: '7 2 * * *'
+    # 定时任务，在每天的北京时间 00:00（UTC 16:00）执行
+    - cron: '0 16 * * *'
       # 定时器更改时间
       # https://tool.lu/crontab/
       # https://datetime360.com/cn/utc-cst-china-time/ #UTC时间 国际协调时间+8=北京时间
