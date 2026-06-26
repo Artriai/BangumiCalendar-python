@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, date, timedelta
 
 from icalendar import Calendar, Event
 
@@ -16,7 +16,11 @@ class iCal:
         event = Event()
         event.add('dtstamp', datetime.today().date(), parameters={'VALUE': 'DATE'})
         event.add('uid', uuid)
-        event.add('dtstart', time, parameters={'VALUE': 'DATE'})
+        if isinstance(time, datetime):
+            event.add('dtstart', time)
+            event.add('dtend', time + timedelta(minutes=30))
+        else:
+            event.add('dtstart', time, parameters={'VALUE': 'DATE'})
         event.add('class', 'PUBLIC')
         event.add('summary', summary)
         event.add("TRANSP", "TRANSPARENT")
