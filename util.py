@@ -1,4 +1,5 @@
 from datetime import datetime, date, timezone, timedelta
+from zoneinfo import ZoneInfo
 
 
 def genUUID(projectId, epsId, userid) -> str:
@@ -31,4 +32,5 @@ def genDateTime(airdate_str, begin_iso_str) -> datetime:
     jst_minute = begin_jst.minute
     air_date = datetime.strptime(airdate_str, "%Y-%m-%d")
     ep_jst = datetime(air_date.year, air_date.month, air_date.day, jst_hour, jst_minute, tzinfo=timezone(timedelta(hours=9)))
-    return ep_jst.astimezone(timezone.utc)
+    return ep_jst.astimezone(ZoneInfo('Asia/Shanghai'))
+
