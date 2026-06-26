@@ -27,10 +27,26 @@ def genDate(time) -> date:
 def genDateTime(airdate_str, begin_iso_str) -> datetime:
     iso_str = begin_iso_str.replace('Z', '+00:00')
     begin_utc = datetime.fromisoformat(iso_str)
-    begin_jst = begin_utc.astimezone(timezone(timedelta(hours=9)))
-    jst_hour = begin_jst.hour
-    jst_minute = begin_jst.minute
+    jst_tz = timezone(timedelta(hours=9))
+    begin_jst = begin_utc.astimezone(jst_tz)
+    
+    # Calculate day offset between the JST actual date and the database programming date
+    begin_prog_date_str = begin_iso_str[:10]
+    begin_prog_date = datetime.strptime(begin_prog_date_str, "%Y-%m-%d").date()
+    day_offset = begin_jst.date() - begin_prog_date
+    
+    # Apply offset to the episode airdate
     air_date = datetime.strptime(airdate_str, "%Y-%m-%d")
-    ep_jst = datetime(air_date.year, air_date.month, air_date.day, jst_hour, jst_minute, tzinfo=timezone(timedelta(hours=9)))
+    ep_air_date_adjusted = air_date + day_offset
+    
+    ep_jst = datetime(
+        ep_air_date_adjusted.year,
+        ep_air_date_adjusted.month,
+        ep_air_date_adjusted.day,
+        begin_jst.hour,
+        begin_jst.minute,
+        tzinfo=jst_tz
+    )
     return ep_jst.astimezone(ZoneInfo('Asia/Shanghai'))
+
 
